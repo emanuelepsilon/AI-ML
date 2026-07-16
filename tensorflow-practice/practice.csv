@@ -1,0 +1,6 @@
+trade_id,date,market,ticker,sector,price,volume
+1,2026-06-01,Stockholm,ERIC,Technology,85,10000
+2,2026-06-01,Stockholm,VOLV,Industrials,260,5000
+3,2026-06-02,Helsinki,NOKIA,Technology,45,8000
+4,2026-06-02,Copenhagen,MAERSK,Industrials,12000,300
+5,2026-06-03,Stockholm,HM,Consumer,160,7000

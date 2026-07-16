@@ -1,0 +1,2 @@
+# This first version uses only Python's standard library.
+# Later, we may add packages for scraping, search APIs, or a web UI.

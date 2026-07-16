@@ -1,0 +1,35 @@
+# Secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local/generated data
+*.db
+*.sqlite
+*.sqlite3
+*.keras
+*.tflite
+*.pkl
+*.npy
+
+# Personal documents and certificates
+*.pdf
+*.docx
+*.webp
+*.png
+*.jpg
+*.jpeg
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/

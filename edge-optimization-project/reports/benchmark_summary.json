@@ -1,0 +1,6 @@
+{
+  "best_f1_model": "keras_fp32",
+  "best_f1": 1.0,
+  "fastest_model": "tflite_float16",
+  "fastest_ms_per_sample": 0.008507166833927235
+}
