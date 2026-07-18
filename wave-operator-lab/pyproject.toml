@@ -1,0 +1,16 @@
+[project]
+name = "wave-operator-lab"
+version = "0.1.0"
+description = "Physics-informed neural super-resolution for acoustic-wave simulations"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "torch>=2.4",
+  "matplotlib>=3.9",
+  "pillow>=10.0",
+  "streamlit>=1.40",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

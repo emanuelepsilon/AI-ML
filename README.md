@@ -4,25 +4,28 @@ Applied artificial intelligence and machine learning work covering retrieval-aug
 
 ## Flagship Project
 
-### [RAG Agent Evaluation Workbench](rag-agent-evaluation-workbench)
+### [WaveOperator Lab](wave-operator-lab)
 
-A local evaluation workbench for retrieval-augmented generation systems. It tests whether an assistant can retrieve the right evidence, cite the correct sources, refuse unsupported questions, and expose retrieval traces for debugging.
+Physics-informed neural super-resolution for heterogeneous acoustic-wave simulations.
 
-```text
-documents -> chunking -> retrieval -> citation-aware answer builder -> evaluation -> reports
-```
+| High-resolution reconstruction | Out-of-distribution error analysis |
+| --- | --- |
+| <img src="wave-operator-lab/assets/wave-operator-comparison.gif" alt="Numerical ground truth and neural reconstruction" width="500"> | <img src="wave-operator-lab/assets/wave-operator-error-analysis.gif" alt="Spatial and temporal error analysis" width="500"> |
 
-The project includes local document ingestion, TF-IDF retrieval, cosine similarity ranking, citation-aware answers, refusal checks, retrieval traces, CSV metrics and an HTML evaluation report.
+The project combines a parameterized acoustic PDE solver, paired coarse/fine simulation data, a Fourier Neural Operator, a residual CNN, physics-aware training, and held-out/OOD evaluation. It measures whether learned correction can recover high-resolution wave fields from cheap coarse-grid simulations.
 
-Current evaluation result:
+| Method | Test relative L2 | OOD relative L2 |
+| --- | ---: | ---: |
+| Coarse interpolation | 0.4613 | 0.5086 |
+| Fourier Neural Operator | 0.3759 | 0.4770 |
+| Convolutional baseline | **0.3542** | **0.4292** |
 
-```text
-5/5 evaluation cases passed
-```
+The best reconstruction model reduces held-out error by **23.2%** relative to interpolation alone. The FNO achieves stronger physics and energy consistency, while the CNN produces the lowest field error and latency. The repository includes trained checkpoints, sample-level metrics, a model card, tests, an interactive dashboard, and reproducible experiment configuration.
 
 ## Project Archive
 
-- `rag-agent-evaluation-workbench` - flagship RAG, citation grounding and agent evaluation workbench.
+- `wave-operator-lab` - flagship scientific ML project for physics-informed acoustic-wave super-resolution.
+- `rag-agent-evaluation-workbench` - RAG, citation grounding and agent evaluation workbench.
 - `ai-internship-intelligence-dashboard` - AI internship ranking dashboard with SQLite analytics, explainable skill matching, charts, and an HTML report.
 - `EmanuelsLLM` - small educational language model implementation.
 - `ai-engineering-projects` - structured AI engineering practice, including an LLM API chat project.
@@ -32,7 +35,3 @@ Current evaluation result:
 - `tensorflow-practice` - TensorFlow and scikit-learn practice scripts.
 - `edge-ml-tflite-practice` - TFLite and TabPFN model testing practice.
 - `edge-optimization-project` - edge AI optimization project with training, conversion, and benchmark scripts.
-
-## Notes
-
-Secrets, local environments, databases, caches, and personal documents are ignored. Project folders are learning and portfolio material gathered from local work and GitHub repositories.

@@ -1,0 +1,46 @@
+{
+  "config": {
+    "seed": 17,
+    "grid_size": 32,
+    "coarse_grid_size": 16,
+    "simulation_steps": 72,
+    "train_scenarios": 28,
+    "validation_scenarios": 6,
+    "test_scenarios": 6,
+    "ood_scenarios": 6,
+    "samples_per_scenario": 8,
+    "cfl": 0.34,
+    "max_velocity": 1.7,
+    "sponge_width": 5,
+    "sponge_strength": 0.075,
+    "fno_width": 20,
+    "fno_modes": 8,
+    "fno_layers": 4,
+    "batch_size": 14,
+    "epochs": 24,
+    "learning_rate": 0.003,
+    "weight_decay": 0.0001,
+    "physics_weight": 0.2,
+    "gradient_weight": 0.05,
+    "early_stopping_patience": 7,
+    "device": "auto"
+  },
+  "training_samples": 224,
+  "validation_samples": 48,
+  "models": {
+    "fno": {
+      "parameters": 207783,
+      "best_epoch": 24,
+      "best_validation_loss": 0.0005354903866342889,
+      "duration_seconds": 96.6258510001935,
+      "checkpoint": "fno_best.pt"
+    },
+    "cnn": {
+      "parameters": 46947,
+      "best_epoch": 23,
+      "best_validation_loss": 0.000492012032433801,
+      "duration_seconds": 44.05225419998169,
+      "checkpoint": "cnn_best.pt"
+    }
+  }
+}
