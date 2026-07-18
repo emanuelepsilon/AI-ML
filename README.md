@@ -4,6 +4,7 @@ Projects and learning work related to machine learning, deep learning, Large Lan
 
 ## Contents
 
+- `ai-internship-intelligence-dashboard` - Ollama/Qwen-planned AI internship ranking dashboard with SQLite analytics, explainable skill matching, charts, and a generated HTML report.
 - `EmanuelsLLM` - small educational language model implementation.
 - `ai-engineering-projects` - structured AI engineering practice, including an LLM API chat project.
 - `gemini-terminal-agent` - terminal-based Gemini API chat agent with search-grounding work.

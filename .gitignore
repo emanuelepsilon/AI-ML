@@ -28,6 +28,7 @@ venv/
 *.png
 *.jpg
 *.jpeg
+!ai-internship-intelligence-dashboard/assets/*.png
 
 # OS/editor
 .DS_Store

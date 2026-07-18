@@ -1,0 +1,11 @@
+company,role,field,location,status,salary_sek,matched_skills,skill_match,score,missing_signals
+Ericsson,AI Engineer Intern,LLM Systems,Stockholm,interview,29000,"agents, git, llm api, python, rag, sql",1.0,94.2,
+Volvo Cars,Edge AI Intern,Edge AI,Gothenburg,applied,28500,"c, edge ai, optimization, python, tensorflow, tflite",1.0,88.1,
+NVIDIA,Edge ML Intern,Edge AI,Remote,saved,32000,"c, edge ai, python, tensorflow, tflite",0.83,75.8,hardware optimization
+Northvolt,ML Intern,Machine Learning,Stockholm,applied,28000,"machine learning, optimization, python",0.75,72.2,data pipelines
+Hugging Face,Agents Intern,LLM Systems,Remote,dream,0,"agents, mcp, python, rag",0.67,69.7,"open source, transformers"
+Sectra,Medical AI Intern,Computer Vision,Linkoping,saved,27500,"computer vision, data analysis, python, tensorflow",0.8,68.9,medical imaging
+OpenAI,AI Systems Intern,LLM Systems,Remote,dream,0,"agents, llm api, python",0.5,60.5,"evaluation, reasoning, tool use"
+Klarna,Analytics Intern,Data,Stockholm,applied,31000,"data analysis, python, sql",0.6,59.8,"dashboarding, statistics"
+Spotify,Data Science Intern,Data,Stockholm,saved,30000,"data analysis, python, sql",0.6,55.5,"experimentation, statistics"
+Saab,Computer Vision Intern,Computer Vision,Linkoping,rejected,27000,"c, computer vision, python",0.6,40.8,"engineering, simulation"

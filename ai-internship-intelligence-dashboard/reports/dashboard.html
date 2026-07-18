@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Internship Intelligence Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: #080b10; color: #e8edf4; }
+    main { max-width: 1120px; margin: 0 auto; padding: 36px 22px 48px; }
+    h1 { font-size: clamp(32px, 5vw, 58px); margin: 0 0 10px; letter-spacing: 0; }
+    h2 { margin-top: 34px; }
+    .sub { color: #9ca3af; max-width: 790px; line-height: 1.55; }
+    .hero { border-bottom: 1px solid #263241; padding-bottom: 26px; }
+    .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+    .metric { background: #111827; border: 1px solid #263241; border-radius: 8px; padding: 18px; }
+    .metric b { display: block; font-size: 28px; margin-bottom: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .card { position: relative; background: #101721; border: 1px solid #263241; border-radius: 8px; padding: 18px; min-height: 190px; }
+    .score { position: absolute; top: 14px; right: 14px; background: #22c55e; color: #06100b; border-radius: 999px; padding: 6px 10px; font-weight: 800; }
+    .role { color: #93c5fd; font-weight: 700; }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    img { width: 100%; border-radius: 8px; border: 1px solid #263241; background: #0f1720; }
+    @media (max-width: 800px) { .metric-row, .grid, .charts { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>AI Internship Intelligence Dashboard</h1>
+      <p class="sub">A SQLite-backed ranking system that connects an AI/ML technical profile to internship opportunities using skill overlap, role relevance, application stage, and explainable scoring.</p>
+      <div class="metric-row">
+        <div class="metric"><b>10</b>tracked roles</div>
+        <div class="metric"><b>Ericsson</b>top match</div>
+        <div class="metric"><b>94.2</b>best fit score</div>
+      </div>
+    </section>
+    <h2>Ranked Opportunities</h2>
+    <section class="grid">
+    <article class="card">
+      <div class="score">94.2</div>
+      <h3>Ericsson</h3>
+      <p class="role">AI Engineer Intern</p>
+      <p>LLM Systems / Stockholm / interview</p>
+      <p><strong>Matched:</strong> agents, git, llm api, python, rag, sql</p>
+      <p><strong>Next signals:</strong> </p>
+    </article>
+    
+
+    <article class="card">
+      <div class="score">88.1</div>
+      <h3>Volvo Cars</h3>
+      <p class="role">Edge AI Intern</p>
+      <p>Edge AI / Gothenburg / applied</p>
+      <p><strong>Matched:</strong> c, edge ai, optimization, python, tensorflow, tflite</p>
+      <p><strong>Next signals:</strong> </p>
+    </article>
+    
+
+    <article class="card">
+      <div class="score">75.8</div>
+      <h3>NVIDIA</h3>
+      <p class="role">Edge ML Intern</p>
+      <p>Edge AI / Remote / saved</p>
+      <p><strong>Matched:</strong> c, edge ai, python, tensorflow, tflite</p>
+      <p><strong>Next signals:</strong> hardware optimization</p>
+    </article>
+    
+
+    <article class="card">
+      <div class="score">72.2</div>
+      <h3>Northvolt</h3>
+      <p class="role">ML Intern</p>
+      <p>Machine Learning / Stockholm / applied</p>
+      <p><strong>Matched:</strong> machine learning, optimization, python</p>
+      <p><strong>Next signals:</strong> data pipelines</p>
+    </article>
+    
+
+    <article class="card">
+      <div class="score">69.7</div>
+      <h3>Hugging Face</h3>
+      <p class="role">Agents Intern</p>
+      <p>LLM Systems / Remote / dream</p>
+      <p><strong>Matched:</strong> agents, mcp, python, rag</p>
+      <p><strong>Next signals:</strong> open source, transformers</p>
+    </article>
+    
+
+    <article class="card">
+      <div class="score">68.9</div>
+      <h3>Sectra</h3>
+      <p class="role">Medical AI Intern</p>
+      <p>Computer Vision / Linkoping / saved</p>
+      <p><strong>Matched:</strong> computer vision, data analysis, python, tensorflow</p>
+      <p><strong>Next signals:</strong> medical imaging</p>
+    </article>
+    </section>
+    <h2>Analytics</h2>
+    <section class="charts">
+      <img src="../assets/field_score.png" alt="Average score by field">
+      <img src="../assets/status_pipeline.png" alt="Application status pipeline">
+    </section>
+  </main>
+</body>
+</html>
