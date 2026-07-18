@@ -2,7 +2,7 @@
 
 Portfolio-ready AI/ML internship ranking dashboard built from structured opportunity data, SQL analytics, and resume-skill matching.
 
-The project was planned through the local multi-agent orchestrator using Ollama/Qwen, then implemented as a compact Python analytics pipeline.
+The project is implemented as a compact Python analytics pipeline with structured data, scoring logic, and report output.
 
 ## What It Does
 

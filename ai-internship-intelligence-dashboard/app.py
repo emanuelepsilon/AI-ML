@@ -253,7 +253,7 @@ def print_report(ranked: list[dict[str, object]]) -> None:
     for index, row in enumerate(ranked[:5], start=1):
         print(f"{index}. {row['company']:<13} {row['score']:>5}  {row['role']}  [{row['field']}]")
     print()
-    print("Generated:")
+    print("Output:")
     print(f"- {REPORTS_DIR / 'dashboard.html'}")
     print(f"- {REPORTS_DIR / 'top_ranked_opportunities.csv'}")
     print(f"- {DB_PATH}")
