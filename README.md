@@ -8,6 +8,8 @@ Applied artificial intelligence and machine learning work covering retrieval-aug
 
 Physics-informed neural super-resolution for heterogeneous acoustic-wave simulations.
 
+The numerical PDE solver originated in coursework. I independently extended it into the machine-learning system shown here to investigate a practical alternative to recomputing every high-resolution PDE case entirely from scratch.
+
 | High-resolution reconstruction | Out-of-distribution error analysis |
 | --- | --- |
 | <img src="wave-operator-lab/assets/wave-operator-comparison.gif" alt="Numerical ground truth and neural reconstruction" width="500"> | <img src="wave-operator-lab/assets/wave-operator-error-analysis.gif" alt="Spatial and temporal error analysis" width="500"> |

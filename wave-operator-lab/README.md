@@ -6,6 +6,12 @@ Physics-informed neural super-resolution for heterogeneous acoustic-wave simulat
 | --- | --- |
 | <img src="assets/wave-operator-comparison.gif" alt="Numerical ground truth and neural reconstruction" width="500"> | <img src="assets/wave-operator-error-analysis.gif" alt="Spatial and temporal error analysis" width="500"> |
 
+## Project Origin
+
+The acoustic finite-difference solver originated in numerical PDE coursework. I independently extended that foundation into a scientific machine-learning study after identifying a practical opportunity: a learned correction model can reconstruct a fine wave field from a cheaper coarse simulation instead of requiring every high-resolution configuration to be computed entirely from scratch.
+
+The neural super-resolution pipeline, Fourier Neural Operator and CNN comparison, physics-aware objective, out-of-distribution evaluation, benchmark reports, and interactive dashboard were developed as that extension beyond the original coursework.
+
 ## Objective
 
 High-resolution partial differential equation simulations can become expensive as spatial resolution, geometric complexity, and parameter sweeps grow. This project tests a hybrid scientific machine-learning approach:
