@@ -1,35 +1,4 @@
-"""
-LlamaIndex Agents - Step 2: Multi-agent workflow
-
-Goal:
-Show how multiple specialized agents can work inside one AgentWorkflow.
-
-Single-agent setup:
-    one agent has all tools and must do everything
-
-Multi-agent setup:
-    multiple agents exist, each with a role, description, and tools
-
-In this example:
-
-    bank_agent
-        knows bank/customer/policy tools
-
-    math_agent
-        knows calculation tools
-
-The course also mentions handoffs between agents. That is real, but with small
-local ReAct models like qwen2:7b, the model may understand "handoff" but answer
-in plain text instead of calling the built-in handoff tool.
-
-So this demo keeps the learning deterministic:
-
-    bank_workflow starts with bank_agent
-    math_workflow starts with math_agent
-
-You still see the core multi-agent idea:
-different named agents, different roles, different tools.
-"""
+"""LlamaIndex multi-agent workflow with specialist handoffs."""
 
 import asyncio
 
@@ -37,22 +6,11 @@ from llama_index.core.agent.workflow import AgentWorkflow, ReActAgent
 from llama_index.core.tools import FunctionTool
 from llama_index.llms.ollama import Ollama
 
-
-# ---------------------------------------------------------------------------
-# 1. LOCAL LLM
-# ---------------------------------------------------------------------------
-# Make sure Ollama is running:
-#
-#     ollama serve
 llm = Ollama(
     model="qwen2:7b",
     request_timeout=120.0,
 )
 
-
-# ---------------------------------------------------------------------------
-# 2. FAKE BANK DATA
-# ---------------------------------------------------------------------------
 CUSTOMERS = {
     "C001": {
         "name": "Alice Rivera",
@@ -100,10 +58,6 @@ def find_customer(customer_id_or_name: str):
     return None, None
 
 
-# ---------------------------------------------------------------------------
-# 3. BANK TOOLS
-# ---------------------------------------------------------------------------
-# These belong to the bank_agent.
 def get_customer_profile(customer_id_or_name: str) -> dict:
     """Get one customer's profile by ID or name."""
     customer_id, record = find_customer(customer_id_or_name)
@@ -154,10 +108,6 @@ bank_tools = [
 ]
 
 
-# ---------------------------------------------------------------------------
-# 4. MATH TOOLS
-# ---------------------------------------------------------------------------
-# These belong to the math_agent.
 def calculate_debt_to_income(monthly_debt: float, annual_income: float) -> float:
     """Calculate debt-to-income ratio from monthly debt and annual income."""
     monthly_income = annual_income / 12
@@ -182,14 +132,6 @@ math_tools = [
     ),
 ]
 
-
-# ---------------------------------------------------------------------------
-# 5. SPECIALIZED AGENTS
-# ---------------------------------------------------------------------------
-# Each agent has:
-# - name: required for multi-agent workflows
-# - description: used by handoff routing
-# - tools: only the tools that agent should use
 bank_agent = ReActAgent(
     name="bank_agent",
     description=(
@@ -223,18 +165,6 @@ math_agent = ReActAgent(
     ),
 )
 
-
-# ---------------------------------------------------------------------------
-# 6. AGENT WORKFLOWS
-# ---------------------------------------------------------------------------
-# AgentWorkflow coordinates agents.
-#
-# root_agent is where that workflow starts.
-#
-# We create two workflows over the same two agents so the example is reliable
-# with a small local model:
-# - bank_workflow starts at bank_agent
-# - math_workflow starts at math_agent
 bank_workflow = AgentWorkflow(
     agents=[bank_agent, math_agent],
     root_agent="bank_agent",
@@ -248,16 +178,6 @@ math_workflow = AgentWorkflow(
 )
 
 
-# ---------------------------------------------------------------------------
-# 7. ASK A QUESTION
-# ---------------------------------------------------------------------------
-# We run two questions.
-#
-# Expected flow 1:
-# bank_agent -> bank tool -> final answer
-#
-# Expected flow 2:
-# math_agent -> math tool -> final answer
 async def main():
     questions = [
         (

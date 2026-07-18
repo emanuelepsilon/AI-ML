@@ -1,30 +1,4 @@
-"""
-LangGraph - Step 2: First practical graph with an LLM node
-
-This follows the Hugging Face "Building Your First LangGraph" page, but uses
-your local Ollama model instead of OpenAI.
-
-Goal:
-Build an email-processing graph:
-
-    START
-      -> read_email
-      -> classify_email
-      -> if spam: handle_spam -> END
-      -> if legitimate: draft_response -> notify_user -> END
-
-New idea compared to the previous LangGraph script:
-
-    One node calls an LLM and writes the LLM result into state.
-
-LangGraph itself does not care whether a node is:
-    - simple Python logic
-    - an LLM call
-    - a tool call
-    - an API call
-
-It only cares that the node receives state and returns state updates.
-"""
+"""LangGraph email-triage workflow with model-based routing."""
 
 from typing import Any, Literal, Optional
 
@@ -32,15 +6,6 @@ import requests
 from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
 
-
-# ---------------------------------------------------------------------------
-# 1. LOCAL OLLAMA SETTINGS
-# ---------------------------------------------------------------------------
-# Make sure Ollama is running in another terminal:
-#
-#     ollama serve
-#
-# This script uses the model you have been using locally.
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "qwen2:7b"
 
@@ -65,17 +30,6 @@ def call_ollama(prompt: str) -> str:
     return response.json()["response"].strip()
 
 
-# ---------------------------------------------------------------------------
-# 2. STATE
-# ---------------------------------------------------------------------------
-# This is the shared data that flows through the graph.
-#
-# The graph starts with an email.
-# Nodes gradually fill in:
-# - classification
-# - spam reason
-# - draft response
-# - processing notes
 class EmailState(TypedDict):
     email: dict[str, Any]
     is_spam: Optional[bool]
@@ -85,10 +39,6 @@ class EmailState(TypedDict):
     notes: list[str]
 
 
-# ---------------------------------------------------------------------------
-# 3. NODES
-# ---------------------------------------------------------------------------
-# Each node receives the current state and returns updates.
 def read_email(state: EmailState) -> dict:
     """Read/log the incoming email."""
     email = state["email"]
@@ -214,17 +164,9 @@ def notify_user(state: EmailState) -> dict:
     print("\nDraft response:")
     print(state["email_draft"])
 
-    return {
-        "notes": state["notes"] + ["Presented draft response for review."]
-    }
+    return {"notes": state["notes"] + ["Presented draft response for review."]}
 
 
-# ---------------------------------------------------------------------------
-# 4. ROUTING FUNCTION
-# ---------------------------------------------------------------------------
-# Conditional edges call this function after classify_email.
-#
-# The return value decides which node runs next.
 def route_email(state: EmailState) -> Literal["spam", "legitimate"]:
     print("--- route_email conditional edge ---")
 
@@ -234,9 +176,6 @@ def route_email(state: EmailState) -> Literal["spam", "legitimate"]:
     return "legitimate"
 
 
-# ---------------------------------------------------------------------------
-# 5. BUILD THE GRAPH
-# ---------------------------------------------------------------------------
 builder = StateGraph(EmailState)
 
 builder.add_node("read_email", read_email)
@@ -263,10 +202,6 @@ builder.add_edge("notify_user", END)
 
 graph = builder.compile()
 
-
-# ---------------------------------------------------------------------------
-# 6. RUN EXAMPLES
-# ---------------------------------------------------------------------------
 LEGITIMATE_EMAIL = {
     "sender": "customer@example.com",
     "subject": "Question about mortgage requirements",
