@@ -111,7 +111,7 @@ def render_propagation_frame(
     angle: float,
     z_limit: float,
 ) -> Image.Image:
-    figure = plt.figure(figsize=(8.8, 5.2), dpi=100, facecolor="#000000")
+    figure = plt.figure(figsize=(10.4, 4.8), dpi=100, facecolor="#000000")
     ax = figure.add_subplot(1, 1, 1, projection="3d")
     _render_surface(
         ax,
