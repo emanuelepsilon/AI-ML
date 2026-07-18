@@ -2,9 +2,11 @@
 
 Physics-informed neural super-resolution for heterogeneous acoustic-wave simulations.
 
-| High-resolution reconstruction | Out-of-distribution error analysis |
+| Smooth reference simulation | Neural coarse-to-fine predictor |
 | --- | --- |
-| <img src="assets/wave-operator-comparison.gif" alt="Numerical ground truth and neural reconstruction" width="500"> | <img src="assets/wave-operator-error-analysis.gif" alt="Spatial and temporal error analysis" width="500"> |
+| <img src="assets/wave-propagation.gif" alt="Smooth three-dimensional acoustic-wave propagation" width="500"> | <img src="assets/neural-predictor.gif" alt="Neural network reconstructing a fine wave field from a coarse simulation" width="500"> |
+
+The left animation is the high-resolution finite-difference reference solution. The right shows the trained CNN receiving a cheap `16 x 16` coarse simulation and reconstructing a `32 x 32` wave field, with its error measured against withheld numerical ground truth.
 
 ## Project Origin
 

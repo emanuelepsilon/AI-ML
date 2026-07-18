@@ -61,133 +61,142 @@ def predict_run(
     return predict_sequence(model, run, config, device)
 
 
-def render_comparison_frame(
+def _render_surface(
+    ax,
+    field: np.ndarray,
+    title: str,
+    angle: float,
+    z_limit: float,
+    smooth_passes: int,
+    show_grid: bool = False,
+) -> None:
+    size = field.shape[0]
+    axis = np.linspace(0.0, 1.0, size)
+    xx, yy = np.meshgrid(axis, axis)
+    rendered = _smooth(field, passes=smooth_passes) if smooth_passes else field
+    _style_3d(ax)
+    ax.plot_surface(
+        xx,
+        yy,
+        rendered,
+        cmap="turbo",
+        vmin=-z_limit,
+        vmax=z_limit,
+        linewidth=0.24 if show_grid else 0,
+        edgecolor=(0.92, 0.95, 1.0, 0.22) if show_grid else "none",
+        antialiased=True,
+    )
+    ax.contour(
+        xx,
+        yy,
+        rendered,
+        zdir="z",
+        offset=-z_limit,
+        levels=12,
+        cmap="turbo",
+        linewidths=0.6,
+        alpha=0.72,
+    )
+    ax.set(xlim=(0, 1), ylim=(0, 1), zlim=(-z_limit, z_limit))
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("pressure")
+    ax.set_title(title, fontsize=12, weight="bold", pad=9)
+    ax.view_init(elev=28, azim=angle)
+
+
+def render_propagation_frame(
     truth: np.ndarray,
-    prediction: np.ndarray,
     step: int,
     angle: float,
     z_limit: float,
 ) -> Image.Image:
-    size = truth.shape[0]
-    axis = np.linspace(0.0, 1.0, size)
-    xx, yy = np.meshgrid(axis, axis)
-    figure = plt.figure(figsize=(10.4, 4.8), dpi=100, facecolor="#000000")
-    for panel, (field, title) in enumerate(
-        ((truth, "Numerical ground truth"), (prediction, "Neural operator prediction")),
-        start=1,
-    ):
-        ax = figure.add_subplot(1, 2, panel, projection="3d")
-        _style_3d(ax)
-        rendered = _smooth(field)
-        ax.plot_surface(
-            xx,
-            yy,
-            rendered,
-            cmap="turbo",
-            vmin=-z_limit,
-            vmax=z_limit,
-            linewidth=0,
-            antialiased=True,
-        )
-        ax.contour(
-            xx,
-            yy,
-            rendered,
-            zdir="z",
-            offset=-z_limit,
-            levels=10,
-            cmap="turbo",
-            linewidths=0.65,
-            alpha=0.72,
-        )
-        ax.set(xlim=(0, 1), ylim=(0, 1), zlim=(-z_limit, z_limit))
-        ax.set_xlabel("x")
-        ax.set_ylabel("y")
-        ax.set_zlabel("pressure")
-        ax.set_title(title, fontsize=12, weight="bold", pad=10)
-        ax.view_init(elev=28, azim=angle)
+    figure = plt.figure(figsize=(8.8, 5.2), dpi=100, facecolor="#000000")
+    ax = figure.add_subplot(1, 1, 1, projection="3d")
+    _render_surface(
+        ax,
+        truth,
+        "High-resolution finite-difference solution",
+        angle,
+        z_limit,
+        smooth_passes=1,
+    )
     figure.suptitle(
-        f"Acoustic field reconstruction | time step {step:02d}",
+        f"Heterogeneous acoustic-wave propagation | time step {step:02d}",
         color=TEXT,
         fontsize=14,
         weight="bold",
     )
-    figure.subplots_adjust(left=0.0, right=1.0, bottom=0.0, top=0.88, wspace=0.0)
+    figure.text(
+        0.5,
+        0.025,
+        "Reference simulation · 32 x 32 grid",
+        color="#94a3b8",
+        fontsize=10,
+        ha="center",
+    )
+    figure.subplots_adjust(left=0.01, right=0.99, bottom=0.13, top=0.87)
     return _to_image(figure)
 
 
-def render_error_frame(
-    truth: np.ndarray,
+def render_predictor_frame(
+    coarse_input: np.ndarray,
     prediction: np.ndarray,
-    time_steps: list[int],
-    error_history: list[float],
+    truth: np.ndarray,
     step: int,
     angle: float,
-    error_limit: float,
+    z_limit: float,
 ) -> Image.Image:
-    error = np.abs(prediction - truth)
-    size = truth.shape[0]
-    axis = np.linspace(0.0, 1.0, size)
-    xx, yy = np.meshgrid(axis, axis)
-    figure = plt.figure(figsize=(10.4, 4.8), dpi=100, facecolor="#000000")
-    surface_ax = figure.add_subplot(1, 2, 1, projection="3d")
-    _style_3d(surface_ax)
-    surface_ax.plot_surface(
-        xx,
-        yy,
-        _smooth(error),
-        cmap="magma",
-        vmin=0.0,
-        vmax=error_limit,
-        linewidth=0,
-        antialiased=True,
+    relative_l2 = float(
+        np.linalg.norm(prediction - truth) / max(np.linalg.norm(truth), 1.0e-8)
     )
-    surface_ax.set(xlim=(0, 1), ylim=(0, 1), zlim=(0, error_limit))
-    surface_ax.set_xlabel("x")
-    surface_ax.set_ylabel("y")
-    surface_ax.set_zlabel("absolute error")
-    surface_ax.set_title("Spatial prediction error", fontsize=12, weight="bold", pad=10)
-    surface_ax.view_init(elev=30, azim=angle)
-
-    curve_ax = figure.add_subplot(1, 2, 2)
-    curve_ax.set_facecolor("#06080c")
-    curve_ax.plot(time_steps[: len(error_history)], error_history, color="#38bdf8", linewidth=2.2)
-    curve_ax.scatter(time_steps[len(error_history) - 1], error_history[-1], color="#facc15", s=48, zorder=4)
-    curve_ax.set_xlim(min(time_steps), max(time_steps))
-    curve_ax.set_ylim(0.0, max(max(error_history) * 1.2, 0.1))
-    curve_ax.set_xlabel("time step", color=TEXT)
-    curve_ax.set_ylabel("relative L2 error", color=TEXT)
-    curve_ax.set_title("Error through time", color=TEXT, fontsize=12, weight="bold")
-    curve_ax.tick_params(colors=TEXT)
-    curve_ax.grid(alpha=0.2)
-    for spine in curve_ax.spines.values():
-        spine.set_color("#4b5563")
-    curve_ax.text(
-        0.04,
-        0.93,
-        f"current error: {error_history[-1]:.3f}",
-        transform=curve_ax.transAxes,
-        color="#facc15",
-        va="top",
-        fontsize=11,
+    correlation = float(np.corrcoef(prediction.ravel(), truth.ravel())[0, 1])
+    figure = plt.figure(figsize=(10.4, 4.8), dpi=100, facecolor="#000000")
+    coarse_ax = figure.add_subplot(1, 2, 1, projection="3d")
+    prediction_ax = figure.add_subplot(1, 2, 2, projection="3d")
+    _render_surface(
+        coarse_ax,
+        coarse_input,
+        "Coarse solver input · 16 x 16",
+        angle,
+        z_limit,
+        smooth_passes=0,
+        show_grid=True,
+    )
+    _render_surface(
+        prediction_ax,
+        prediction,
+        "Neural reconstruction · 32 x 32",
+        angle,
+        z_limit,
+        smooth_passes=1,
     )
     figure.suptitle(
-        f"Out-of-distribution diagnostic | time step {step:02d}",
+        f"CNN coarse-to-fine predictor | OOD case | time step {step:02d}",
         color=TEXT,
         fontsize=14,
         weight="bold",
     )
-    figure.subplots_adjust(left=0.02, right=0.98, bottom=0.12, top=0.86, wspace=0.22)
+    figure.text(
+        0.5,
+        0.025,
+        f"Validated against withheld ground truth · relative L2 {relative_l2:.3f} · correlation {correlation:.3f}",
+        color="#94a3b8",
+        fontsize=10,
+        ha="center",
+    )
+    figure.subplots_adjust(left=0.0, right=1.0, bottom=0.14, top=0.87, wspace=0.0)
     return _to_image(figure)
 
 
-def save_gif(frames: list[Image.Image], path: Path, duration: int = 105) -> None:
+def save_gif(frames: list[Image.Image], path: Path, duration: int = 72) -> None:
     frames[0].save(
         path,
         save_all=True,
         append_images=frames[1:],
         optimize=True,
         duration=duration,
+        disposal=2,
         loop=0,
     )
 
@@ -200,35 +209,38 @@ def create_demo_visuals(
     assets_dir: Path,
 ) -> dict[str, float]:
     assets_dir.mkdir(parents=True, exist_ok=True)
-    time_indices = np.linspace(4, config.simulation_steps - 3, 24).round().astype(int).tolist()
+    time_indices = np.linspace(6, config.simulation_steps - 4, 48).round().astype(int).tolist()
     rollout = predict_run(model, run, config, device)
     predictions = rollout[time_indices]
     truth = run.fields[time_indices]
-    z_limit = max(float(np.percentile(np.abs(truth), 99.5)), 0.08)
+    coarse_inputs = run.coarse_fields[time_indices]
+    z_limit = max(
+        float(np.percentile(np.abs(np.concatenate((truth, predictions), axis=0)), 99.6)),
+        0.08,
+    )
     errors = [
         float(np.linalg.norm(predicted - expected) / max(np.linalg.norm(expected), 1.0e-8))
         for predicted, expected in zip(predictions, truth)
     ]
-    error_limit = max(float(np.percentile(np.abs(predictions - truth), 99.2)), 0.025)
-
-    comparison_frames = [
-        render_comparison_frame(expected, predicted, step, -58 + frame * 1.0, z_limit)
-        for frame, (step, expected, predicted) in enumerate(zip(time_indices, truth, predictions))
+    propagation_frames = [
+        render_propagation_frame(expected, step, -56 + frame * 0.12, z_limit)
+        for frame, (step, expected) in enumerate(zip(time_indices, truth))
     ]
-    error_frames = [
-        render_error_frame(
-            expected,
+    predictor_frames = [
+        render_predictor_frame(
+            coarse,
             predicted,
-            time_indices,
-            errors[: frame + 1],
+            expected,
             step,
-            -50 + frame * 0.9,
-            error_limit,
+            -56 + frame * 0.12,
+            z_limit,
         )
-        for frame, (step, expected, predicted) in enumerate(zip(time_indices, truth, predictions))
+        for frame, (step, coarse, expected, predicted) in enumerate(
+            zip(time_indices, coarse_inputs, truth, predictions)
+        )
     ]
-    save_gif(comparison_frames, assets_dir / "wave-operator-comparison.gif")
-    save_gif(error_frames, assets_dir / "wave-operator-error-analysis.gif")
+    save_gif(propagation_frames, assets_dir / "wave-propagation.gif")
+    save_gif(predictor_frames, assets_dir / "neural-predictor.gif")
     return {
         "demo_mean_relative_l2": float(np.mean(errors)),
         "demo_final_relative_l2": float(errors[-1]),

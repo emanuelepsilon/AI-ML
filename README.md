@@ -8,11 +8,11 @@ Applied artificial intelligence and machine learning work covering retrieval-aug
 
 Physics-informed neural super-resolution for heterogeneous acoustic-wave simulations.
 
-The numerical PDE solver originated in coursework. I independently extended it into the machine-learning system shown here to investigate a practical alternative to recomputing every high-resolution PDE case entirely from scratch.
-
-| High-resolution reconstruction | Out-of-distribution error analysis |
+| Smooth reference simulation | Neural coarse-to-fine predictor |
 | --- | --- |
-| <img src="wave-operator-lab/assets/wave-operator-comparison.gif" alt="Numerical ground truth and neural reconstruction" width="500"> | <img src="wave-operator-lab/assets/wave-operator-error-analysis.gif" alt="Spatial and temporal error analysis" width="500"> |
+| <img src="wave-operator-lab/assets/wave-propagation.gif" alt="Smooth three-dimensional acoustic-wave propagation" width="500"> | <img src="wave-operator-lab/assets/neural-predictor.gif" alt="Neural network reconstructing a fine wave field from a coarse simulation" width="500"> |
+
+The numerical PDE solver originated in coursework. I independently extended it into the machine-learning system shown here to investigate a practical alternative to recomputing every high-resolution PDE case entirely from scratch.
 
 The project combines a parameterized acoustic PDE solver, paired coarse/fine simulation data, a Fourier Neural Operator, a residual CNN, physics-aware training, and held-out/OOD evaluation. It measures whether learned correction can recover high-resolution wave fields from cheap coarse-grid simulations.
 
