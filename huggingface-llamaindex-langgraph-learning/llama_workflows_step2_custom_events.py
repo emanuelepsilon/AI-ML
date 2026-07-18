@@ -1,34 +1,9 @@
-"""
-LlamaIndex Workflows - Step 2: Multi-step workflow with custom events
-
-Idea:
-The previous workflow was:
-
-    StartEvent -> one step -> StopEvent
-
-This workflow is:
-
-    StartEvent -> load_customer -> CustomerLoadedEvent -> assess_risk -> StopEvent
-
-Important:
-A step does not have to end the workflow.
-A step can return a custom Event that carries structured data to the next step.
-
-That makes workflows feel like typed pipelines.
-"""
+"""LlamaIndex workflow using custom events."""
 
 import asyncio
 
 from llama_index.core.workflow import Event, StartEvent, StopEvent, Workflow, step
 
-
-# ---------------------------------------------------------------------------
-# 1. FAKE BANK DATABASE
-# ---------------------------------------------------------------------------
-# No LLM yet.
-# No RAG yet.
-#
-# We are focusing only on workflow mechanics.
 CUSTOMERS = {
     "alice": {
         "customer_id": "C001",
@@ -47,33 +22,11 @@ CUSTOMERS = {
 }
 
 
-# ---------------------------------------------------------------------------
-# 2. CUSTOM EVENT
-# ---------------------------------------------------------------------------
-# Event is the base class for workflow events.
-#
-# This custom event carries customer data from one step to another.
-#
-# In plain English:
-# "The customer was successfully loaded, here is the customer data."
 class CustomerLoadedEvent(Event):
     customer: dict
 
 
-# ---------------------------------------------------------------------------
-# 3. CREATE WORKFLOW CLASS
-# ---------------------------------------------------------------------------
 class CustomerRiskWorkflow(Workflow):
-    # -----------------------------------------------------------------------
-    # STEP 1: LOAD CUSTOMER
-    # -----------------------------------------------------------------------
-    # This step listens for StartEvent.
-    #
-    # StartEvent can carry arbitrary keyword arguments from workflow.run(...).
-    # We will pass customer_name="alice" when running the workflow.
-    #
-    # This step returns CustomerLoadedEvent, not StopEvent.
-    # That means the workflow continues.
     @step
     async def load_customer(self, ev: StartEvent) -> CustomerLoadedEvent | StopEvent:
         customer_name = ev.get("customer_name", "").lower().strip()
@@ -88,14 +41,6 @@ class CustomerRiskWorkflow(Workflow):
 
         return CustomerLoadedEvent(customer=customer)
 
-    # -----------------------------------------------------------------------
-    # STEP 2: ASSESS RISK
-    # -----------------------------------------------------------------------
-    # This step listens for CustomerLoadedEvent.
-    #
-    # It receives the structured data returned by load_customer(...).
-    #
-    # This step returns StopEvent, so the workflow ends here.
     @step
     async def assess_risk(self, ev: CustomerLoadedEvent) -> StopEvent:
         customer = ev.customer
@@ -126,13 +71,9 @@ class CustomerRiskWorkflow(Workflow):
         return StopEvent(result=result)
 
 
-# ---------------------------------------------------------------------------
-# 4. RUN THE WORKFLOW
-# ---------------------------------------------------------------------------
 async def main():
     workflow = CustomerRiskWorkflow(timeout=10, verbose=True)
 
-    # customer_name becomes available inside StartEvent.
     result = await workflow.run(customer_name="alice")
 
     print("\nWorkflow result:")

@@ -1,29 +1,7 @@
-"""
-Real MCP server: Bank tools
-
-This file is the SERVER side.
-
-It exposes tools over the Model Context Protocol (MCP).
-The agent does not import these Python functions directly.
-Instead, the client starts this file as a separate MCP server process and
-communicates with it over stdio using the MCP protocol.
-
-Run manually if you want to see that it starts:
-
-    .\\.venv\\Scripts\\python.exe .\\mcp_bank_server.py
-
-It will appear to "hang" because an MCP stdio server waits for a client.
-That is normal.
-"""
+"""MCP server exposing local banking data tools."""
 
 from mcp.server.fastmcp import FastMCP
 
-
-# ---------------------------------------------------------------------------
-# 1. CREATE MCP SERVER
-# ---------------------------------------------------------------------------
-# FastMCP is a helper that makes it easy to expose Python functions as MCP
-# tools.
 mcp = FastMCP(
     name="bank_mcp_server",
     instructions=(
@@ -32,14 +10,6 @@ mcp = FastMCP(
     ),
 )
 
-
-# ---------------------------------------------------------------------------
-# 2. FAKE BANK DATA
-# ---------------------------------------------------------------------------
-# This data lives on the server side.
-#
-# The client/agent cannot access it directly.
-# It must call MCP tools to get this information.
 CUSTOMERS = {
     "C001": {
         "name": "Alice Rivera",
@@ -97,12 +67,6 @@ def find_customer(customer_id_or_name: str):
     return None, None
 
 
-# ---------------------------------------------------------------------------
-# 3. MCP TOOLS
-# ---------------------------------------------------------------------------
-# @mcp.tool() exposes the function over MCP.
-#
-# These functions become discoverable by an MCP client.
 @mcp.tool()
 def list_customers() -> list[dict]:
     """List all customers in the bank database."""
@@ -199,11 +163,5 @@ def compare_customer_to_policy(customer_id_or_name: str, loan_type: str) -> dict
     }
 
 
-# ---------------------------------------------------------------------------
-# 4. RUN MCP SERVER
-# ---------------------------------------------------------------------------
-# stdio is the classic local MCP transport:
-#
-# client process <-> stdin/stdout <-> server process
 if __name__ == "__main__":
     mcp.run(transport="stdio")

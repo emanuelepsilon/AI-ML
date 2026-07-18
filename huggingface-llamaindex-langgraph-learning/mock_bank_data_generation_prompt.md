@@ -631,7 +631,7 @@ Create these pages/screens:
 
 ### Visual Design and UI Quality
 
-The app must look like a polished, modern financial technology product, not a quick AI-generated demo.
+The app must look like a polished, modern financial technology product, not a quick generic demo.
 
 The UI should feel appropriate for a serious bank or fintech product in 2026:
 
@@ -651,7 +651,7 @@ Avoid anything that looks like:
 - generic Bootstrap demo pages
 - random bright gradients
 - oversized emoji-heavy layouts
-- low-effort AI-generated “vibecoded” UI
+- low-effort or improvised UI
 - cluttered dashboards with no hierarchy
 - inconsistent spacing
 - inconsistent font sizes
@@ -764,7 +764,7 @@ The assistant should never visually imply that it can make final credit approval
 
 #### Quality Bar
 
-Before finishing, review the generated UI and improve anything that looks generic, messy, outdated, or obviously AI-generated.
+Before finishing, review the interface and improve anything that looks generic, messy, outdated, or inconsistent.
 
 The final app should feel like a credible portfolio project for an AI engineer building enterprise banking agents.
 

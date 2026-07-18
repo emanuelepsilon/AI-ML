@@ -1,31 +1,9 @@
-"""
-LlamaIndex Workflows - Step 3: Branches
-
-Idea:
-A workflow does not have to be a straight line.
-
-A step can return different event types depending on what happens.
-Those event types decide which step runs next.
-
-This workflow has two paths:
-
-    Path A: customer found
-        StartEvent -> load_customer -> CustomerLoadedEvent -> assess_risk -> StopEvent
-
-    Path B: customer missing
-        StartEvent -> load_customer -> CustomerMissingEvent -> handle_missing -> StopEvent
-
-This is useful for validation, fallback paths, retries, and controlled decisions.
-"""
+"""LlamaIndex workflow with conditional branches."""
 
 import asyncio
 
 from llama_index.core.workflow import Event, StartEvent, StopEvent, Workflow, step
 
-
-# ---------------------------------------------------------------------------
-# 1. FAKE BANK DATABASE
-# ---------------------------------------------------------------------------
 CUSTOMERS = {
     "alice": {
         "customer_id": "C001",
@@ -42,16 +20,6 @@ CUSTOMERS = {
 }
 
 
-# ---------------------------------------------------------------------------
-# 2. CUSTOM EVENTS
-# ---------------------------------------------------------------------------
-# These events represent different outcomes from the load_customer step.
-#
-# CustomerLoadedEvent means:
-# "Good, we found the customer. Continue to risk assessment."
-#
-# CustomerMissingEvent means:
-# "We could not find the customer. Go to missing-customer handling."
 class CustomerLoadedEvent(Event):
     customer: dict
 
@@ -61,21 +29,7 @@ class CustomerMissingEvent(Event):
     available_customers: list[str]
 
 
-# ---------------------------------------------------------------------------
-# 3. BRANCHING WORKFLOW
-# ---------------------------------------------------------------------------
 class BranchingRiskWorkflow(Workflow):
-    # -----------------------------------------------------------------------
-    # STEP 1: LOAD CUSTOMER
-    # -----------------------------------------------------------------------
-    # This step can return THREE possible event types:
-    #
-    # - CustomerLoadedEvent: continue normal path
-    # - CustomerMissingEvent: go to missing-customer path
-    # - StopEvent: possible direct stop, if you wanted one
-    #
-    # The important part:
-    # the returned event type controls which step runs next.
     @step
     async def load_customer(
         self, ev: StartEvent
@@ -93,10 +47,6 @@ class BranchingRiskWorkflow(Workflow):
         print(f"Customer found: {customer['name']}")
         return CustomerLoadedEvent(customer=customer)
 
-    # -----------------------------------------------------------------------
-    # PATH A: CUSTOMER FOUND
-    # -----------------------------------------------------------------------
-    # This step only runs if load_customer returns CustomerLoadedEvent.
     @step
     async def assess_risk(self, ev: CustomerLoadedEvent) -> StopEvent:
         customer = ev.customer
@@ -124,10 +74,6 @@ class BranchingRiskWorkflow(Workflow):
             }
         )
 
-    # -----------------------------------------------------------------------
-    # PATH B: CUSTOMER MISSING
-    # -----------------------------------------------------------------------
-    # This step only runs if load_customer returns CustomerMissingEvent.
     @step
     async def handle_missing_customer(self, ev: CustomerMissingEvent) -> StopEvent:
         return StopEvent(
@@ -139,13 +85,6 @@ class BranchingRiskWorkflow(Workflow):
         )
 
 
-# ---------------------------------------------------------------------------
-# 4. RUN TWO SCENARIOS
-# ---------------------------------------------------------------------------
-# We run the workflow twice:
-#
-# - alice exists, so it follows the customer_found path
-# - zoe does not exist, so it follows the customer_missing path
 async def main():
     workflow = BranchingRiskWorkflow(timeout=10, verbose=True)
 

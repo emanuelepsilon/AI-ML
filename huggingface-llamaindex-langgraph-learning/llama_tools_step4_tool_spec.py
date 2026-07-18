@@ -1,22 +1,4 @@
-"""
-Step 4: ToolSpec
-
-In the previous examples, we created tools one at a time.
-
-ToolSpec is useful when you have a *group* of related tools that belong
-together. Instead of manually creating every FunctionTool separately, you put
-related Python methods inside one class, list which methods should become
-tools, and LlamaIndex converts them into agent-usable tools.
-
-Think of this file like:
-
-    BankToolSpec
-        ├── list_customers()
-        ├── get_customer_profile()
-        └── get_loan_policy()
-
-Then the agent can choose the right bank tool depending on the question.
-"""
+"""LlamaIndex tool specification for grouped banking tools."""
 
 import asyncio
 import json
@@ -25,17 +7,6 @@ from llama_index.core.agent.workflow import ReActAgent
 from llama_index.core.tools.tool_spec.base import BaseToolSpec
 from llama_index.llms.ollama import Ollama
 
-
-# ---------------------------------------------------------------------------
-# 1. SMALL FAKE BANK DATABASE
-# ---------------------------------------------------------------------------
-# This is not vector search / RAG yet.
-#
-# This is structured tool data:
-# - customer records live in a dictionary
-# - loan policies live in another dictionary
-#
-# The agent can only access this data by calling the tools below.
 CUSTOMERS = {
     "C001": {
         "name": "Alice Rivera",
@@ -101,15 +72,6 @@ def find_customer(customer_id_or_name: str) -> tuple[str | None, dict | None]:
     return None, None
 
 
-# ---------------------------------------------------------------------------
-# 2. TOOL SPEC CLASS
-# ---------------------------------------------------------------------------
-# BaseToolSpec is the LlamaIndex class for grouping related tools.
-#
-# spec_functions tells LlamaIndex:
-# "These methods should be exposed as tools."
-#
-# If a method is not in spec_functions, the agent cannot call it as a tool.
 class BankToolSpec(BaseToolSpec):
     spec_functions = [
         "list_customers",
@@ -214,46 +176,14 @@ class BankToolSpec(BaseToolSpec):
         return json.dumps(comparison, indent=2)
 
 
-# ---------------------------------------------------------------------------
-# 3. TURN THE TOOL SPEC INTO REAL TOOLS
-# ---------------------------------------------------------------------------
-# BankToolSpec() creates the bundle.
-#
-# .to_tool_list() converts each method in spec_functions into a FunctionTool.
-# The agent receives normal tools, but we got to organize them neatly in one
-# class.
 bank_tool_spec = BankToolSpec()
 bank_tools = bank_tool_spec.to_tool_list()
 
-
-# ---------------------------------------------------------------------------
-# 4. LOCAL LLM
-# ---------------------------------------------------------------------------
-# This uses your local Ollama model.
-#
-# Make sure Ollama is running in another terminal:
-#
-#     ollama serve
-#
-# And make sure you have the model:
-#
-#     ollama pull qwen2:7b
 llm = Ollama(
     model="qwen2:7b",
     request_timeout=120.0,
 )
 
-
-# ---------------------------------------------------------------------------
-# 5. AGENT
-# ---------------------------------------------------------------------------
-# The ReActAgent can:
-# - read the user's question
-# - decide which bank tool to call
-# - inspect the tool result
-# - write a final answer
-#
-# verbose=True prints the internal tool-calling flow, which is good for learning.
 agent = ReActAgent(
     tools=bank_tools,
     llm=llm,
@@ -268,14 +198,6 @@ agent = ReActAgent(
 )
 
 
-# ---------------------------------------------------------------------------
-# 6. ASK A QUESTION
-# ---------------------------------------------------------------------------
-# This question should make the agent use more than one tool:
-# 1. list customers or infer Alice's customer ID
-# 2. get Alice's profile
-# 3. get the mortgage policy
-# 4. call the exact comparison tool
 async def main():
     question = (
         "For Alice, show her customer record and compare her mortgage details "

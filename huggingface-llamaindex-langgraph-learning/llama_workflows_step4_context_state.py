@@ -1,36 +1,16 @@
-"""
-LlamaIndex Workflows - Step 4: Workflow state with Context
-
-Idea:
-Context is shared workflow state.
-
-Earlier, we used custom Events to pass data from one step to the next:
-
-    Step A -> Event(data) -> Step B
-
-Context is different:
-
-    multiple steps can read/write shared state during the same workflow run
-
-Use Context when you want to track things like:
-    - loaded customer
-    - risk flags found so far
-    - number of checks performed
-    - intermediate values
-    - audit trail
-
-This is not chat memory.
-This is workflow execution state.
-"""
+"""LlamaIndex workflow using Context for shared execution state."""
 
 import asyncio
 
-from llama_index.core.workflow import Context, Event, StartEvent, StopEvent, Workflow, step
+from llama_index.core.workflow import (
+    Context,
+    Event,
+    StartEvent,
+    StopEvent,
+    Workflow,
+    step,
+)
 
-
-# ---------------------------------------------------------------------------
-# 1. FAKE BANK DATABASE
-# ---------------------------------------------------------------------------
 CUSTOMERS = {
     "alice": {
         "customer_id": "C001",
@@ -60,13 +40,6 @@ POLICIES = {
 }
 
 
-# ---------------------------------------------------------------------------
-# 2. CUSTOM EVENTS
-# ---------------------------------------------------------------------------
-# These events move the workflow forward.
-#
-# Notice they do not need to carry all data.
-# The detailed shared data will live in Context.
 class CustomerLoadedEvent(Event):
     pass
 
@@ -79,18 +52,7 @@ class DebtCheckedEvent(Event):
     pass
 
 
-# ---------------------------------------------------------------------------
-# 3. WORKFLOW WITH SHARED STATE
-# ---------------------------------------------------------------------------
 class ContextStateRiskWorkflow(Workflow):
-    # -----------------------------------------------------------------------
-    # STEP 1: LOAD CUSTOMER AND INITIALIZE STATE
-    # -----------------------------------------------------------------------
-    # This step writes initial values into ctx.store:
-    # - customer
-    # - policy
-    # - risk_flags
-    # - checks_performed
     @step
     async def load_customer(
         self, ctx: Context, ev: StartEvent
@@ -111,13 +73,6 @@ class ContextStateRiskWorkflow(Workflow):
         print(f"Loaded customer into Context: {customer['name']}")
         return CustomerLoadedEvent()
 
-    # -----------------------------------------------------------------------
-    # STEP 2: CHECK CREDIT SCORE
-    # -----------------------------------------------------------------------
-    # This step reads customer/policy from ctx.store.
-    # Then it updates:
-    # - risk_flags
-    # - checks_performed
     @step
     async def check_credit(
         self, ctx: Context, ev: CustomerLoadedEvent
@@ -141,11 +96,6 @@ class ContextStateRiskWorkflow(Workflow):
         print("Credit check completed.")
         return CreditCheckedEvent()
 
-    # -----------------------------------------------------------------------
-    # STEP 3: CHECK DEBT-TO-INCOME
-    # -----------------------------------------------------------------------
-    # Same idea:
-    # read shared state, update shared state, move forward.
     @step
     async def check_debt_to_income(
         self, ctx: Context, ev: CreditCheckedEvent
@@ -169,10 +119,6 @@ class ContextStateRiskWorkflow(Workflow):
         print("Debt-to-income check completed.")
         return DebtCheckedEvent()
 
-    # -----------------------------------------------------------------------
-    # STEP 4: SUMMARIZE FINAL RESULT
-    # -----------------------------------------------------------------------
-    # This final step reads everything from Context and returns StopEvent.
     @step
     async def summarize(self, ctx: Context, ev: DebtCheckedEvent) -> StopEvent:
         customer = await ctx.store.get("customer")
@@ -196,11 +142,6 @@ class ContextStateRiskWorkflow(Workflow):
         )
 
 
-# ---------------------------------------------------------------------------
-# 4. RUN TWO CUSTOMERS
-# ---------------------------------------------------------------------------
-# Alice should pass the simple checks.
-# Ben should get risk flags.
 async def main():
     workflow = ContextStateRiskWorkflow(timeout=10, verbose=True)
 
