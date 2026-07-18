@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG Agent Evaluation Workbench</title>
+  <style>
+    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: #080b10; color: #e8edf4; }
+    main { max-width: 1080px; margin: 0 auto; padding: 38px 22px 54px; }
+    h1 { margin: 0 0 8px; font-size: 42px; letter-spacing: 0; }
+    h2 { margin-top: 34px; }
+    p { color: #aab4c2; line-height: 1.55; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+    .metric { background: #111827; border: 1px solid #2c394a; border-radius: 8px; padding: 18px; }
+    .metric b { display: block; color: #34d399; font-size: 30px; }
+    table { width: 100%; border-collapse: collapse; background: #101722; border: 1px solid #2c394a; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #263241; vertical-align: top; }
+    th { color: #93c5fd; }
+    @media (max-width: 800px) { .metrics { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>RAG Agent Evaluation Workbench</h1>
+    <p>Local evaluation pipeline for retrieval quality, citation grounding, refusal behavior, and trace inspection.</p>
+    <section class="metrics">
+      <div class="metric"><b>5/5</b>cases passed</div>
+      <div class="metric"><b>1.00</b>average recall</div>
+      <div class="metric"><b>20</b>retrieval traces</div>
+    </section>
+    <h2>Evaluation Summary</h2>
+    <table>
+      <thead><tr><th>Query</th><th>Top Source</th><th>Recall</th><th>Grounded</th><th>Refusal</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>How should a RAG system decide whether to answer or refuse?</td>
+          <td>rag_reliability.md</td>
+          <td>1.00</td>
+          <td>True</td>
+          <td>True</td>
+        </tr>
+        
+
+        <tr>
+          <td>What metrics are useful for evaluating retrieval quality?</td>
+          <td>evaluation_metrics.md</td>
+          <td>1.00</td>
+          <td>True</td>
+          <td>True</td>
+        </tr>
+        
+
+        <tr>
+          <td>How can an agent expose tool calls without hiding important decisions?</td>
+          <td>agent_observability.md</td>
+          <td>1.00</td>
+          <td>True</td>
+          <td>True</td>
+        </tr>
+        
+
+        <tr>
+          <td>What matters when deploying neural networks to constrained edge hardware?</td>
+          <td>edge_ai_notes.md</td>
+          <td>1.00</td>
+          <td>True</td>
+          <td>True</td>
+        </tr>
+        
+
+        <tr>
+          <td>Which customer should receive a loan approval today?</td>
+          <td>agent_observability.md</td>
+          <td>1.00</td>
+          <td>True</td>
+          <td>True</td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Retrieval Trace Sample</h2>
+    <table>
+      <thead><tr><th>Query</th><th>Rank</th><th>Source</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>How should a RAG system decide whether to answer or refuse?</td>
+          <td>1</td>
+          <td>rag_reliability.md</td>
+          <td>0.416</td>
+        </tr>
+        
+
+        <tr>
+          <td>How should a RAG system decide whether to answer or refuse?</td>
+          <td>2</td>
+          <td>agent_observability.md</td>
+          <td>0.111</td>
+        </tr>
+        
+
+        <tr>
+          <td>How should a RAG system decide whether to answer or refuse?</td>
+          <td>3</td>
+          <td>edge_ai_notes.md</td>
+          <td>0.080</td>
+        </tr>
+        
+
+        <tr>
+          <td>How should a RAG system decide whether to answer or refuse?</td>
+          <td>4</td>
+          <td>evaluation_metrics.md</td>
+          <td>0.080</td>
+        </tr>
+        
+
+        <tr>
+          <td>What metrics are useful for evaluating retrieval quality?</td>
+          <td>1</td>
+          <td>evaluation_metrics.md</td>
+          <td>0.355</td>
+        </tr>
+        
+
+        <tr>
+          <td>What metrics are useful for evaluating retrieval quality?</td>
+          <td>2</td>
+          <td>rag_reliability.md</td>
+          <td>0.167</td>
+        </tr>
+        
+
+        <tr>
+          <td>What metrics are useful for evaluating retrieval quality?</td>
+          <td>3</td>
+          <td>agent_observability.md</td>
+          <td>0.048</td>
+        </tr>
+        
+
+        <tr>
+          <td>What metrics are useful for evaluating retrieval quality?</td>
+          <td>4</td>
+          <td>edge_ai_notes.md</td>
+          <td>0.000</td>
+        </tr>
+        
+
+        <tr>
+          <td>How can an agent expose tool calls without hiding important decisions?</td>
+          <td>1</td>
+          <td>agent_observability.md</td>
+          <td>0.302</td>
+        </tr>
+        
+
+        <tr>
+          <td>How can an agent expose tool calls without hiding important decisions?</td>
+          <td>2</td>
+          <td>evaluation_metrics.md</td>
+          <td>0.036</td>
+        </tr>
+        
+
+        <tr>
+          <td>How can an agent expose tool calls without hiding important decisions?</td>
+          <td>3</td>
+          <td>edge_ai_notes.md</td>
+          <td>0.032</td>
+        </tr>
+        
+
+        <tr>
+          <td>How can an agent expose tool calls without hiding important decisions?</td>
+          <td>4</td>
+          <td>rag_reliability.md</td>
+          <td>0.000</td>
+        </tr>
+        
+
+        <tr>
+          <td>What matters when deploying neural networks to constrained edge hardware?</td>
+          <td>1</td>
+          <td>edge_ai_notes.md</td>
+          <td>0.423</td>
+        </tr>
+        
+
+        <tr>
+          <td>What matters when deploying neural networks to constrained edge hardware?</td>
+          <td>2</td>
+          <td>evaluation_metrics.md</td>
+          <td>0.032</td>
+        </tr>
+        
+
+        <tr>
+          <td>What matters when deploying neural networks to constrained edge hardware?</td>
+          <td>3</td>
+          <td>agent_observability.md</td>
+          <td>0.000</td>
+        </tr>
+        
+
+        <tr>
+          <td>What matters when deploying neural networks to constrained edge hardware?</td>
+          <td>4</td>
+          <td>rag_reliability.md</td>
+          <td>0.000</td>
+        </tr>
+        </tbody>
+    </table>
+  </main>
+</body>
+</html>
