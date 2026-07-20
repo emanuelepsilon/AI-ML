@@ -13,7 +13,7 @@ Both models receive three consecutive interpolated coarse fields, the fine-grid 
 
 ## Data
 
-All samples come from the included finite-difference acoustic solver. Training media use smooth random inclusions. OOD media increase contrast and structural complexity and introduce a layered feature absent from training.
+All samples come from the included finite-difference acoustic solver. Training media use smooth random inclusions and variable absorbing boundary profiles. OOD media increase contrast, add a layered feature and use boundary strengths outside the training range.
 
 The default experiment contains:
 

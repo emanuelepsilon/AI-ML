@@ -73,12 +73,34 @@ def create_scenario(config: ExperimentConfig, seed: int, ood: bool = False) -> A
     initial[[0, -1], :] = 0.0
     initial[:, [0, -1]] = 0.0
 
-    kind = "layered multi-inclusion OOD medium" if ood else "smooth heterogeneous medium"
+    if ood:
+        boundary_width = int(
+            rng.choice(
+                [
+                    max(2, config.sponge_width - 2),
+                    min(config.grid_size // 3, config.sponge_width + 3),
+                ]
+            )
+        )
+        boundary_strength = config.sponge_strength * float(rng.choice([0.55, 1.55]))
+        boundary_kind = "unseen absorbing boundary profile"
+    else:
+        boundary_width = int(
+            np.clip(
+                config.sponge_width + rng.integers(-1, 2),
+                2,
+                config.grid_size // 3,
+            )
+        )
+        boundary_strength = config.sponge_strength * rng.uniform(0.85, 1.15)
+        boundary_kind = "variable absorbing boundary profile"
+
+    medium_kind = "layered multi-inclusion OOD medium" if ood else "smooth heterogeneous medium"
     return AcousticScenario(
         velocity=velocity,
         initial_pressure=initial,
-        damping=damping_map(config.grid_size, config.sponge_width, config.sponge_strength),
-        description=kind,
+        damping=damping_map(config.grid_size, boundary_width, boundary_strength),
+        description=f"{medium_kind}, {boundary_kind}",
     )
 
 

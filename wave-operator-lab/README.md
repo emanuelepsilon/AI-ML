@@ -30,11 +30,11 @@ The fine-grid solver is used as ground truth during training and evaluation. It 
 
 | Method | Test relative L2 | OOD relative L2 | Test correlation | OOD correlation |
 | --- | ---: | ---: | ---: | ---: |
-| Coarse interpolation | 0.4613 | 0.5086 | 0.8762 | 0.8526 |
-| Fourier Neural Operator | 0.3759 | 0.4770 | 0.9032 | 0.8680 |
-| Convolutional baseline | **0.3542** | **0.4292** | **0.9119** | **0.8874** |
+| Coarse interpolation | 0.4585 | 0.5039 | 0.8771 | 0.8550 |
+| Fourier Neural Operator | 0.3750 | 0.4758 | 0.9033 | 0.8687 |
+| Convolutional baseline | **0.3541** | **0.4309** | **0.9113** | **0.8871** |
 
-The convolutional model reduces reconstruction error by **23.2%** on the held-out test split and **15.6%** on the harder out-of-distribution split relative to interpolation alone. The Fourier Neural Operator produces the lower physics residual and substantially better energy consistency, exposing a useful accuracy-versus-physics tradeoff rather than a single cherry-picked score.
+The convolutional model reduces reconstruction error by **22.8%** on the held-out test split and **14.5%** on the harder out-of-distribution split relative to interpolation alone. The Fourier Neural Operator produces the lower physics residual and substantially better energy consistency, exposing a useful accuracy-versus-physics tradeoff rather than a single cherry-picked score.
 
 Full measurements are in [the benchmark report](reports/benchmark.md), with sample-level results in [`evaluation_samples.csv`](reports/evaluation_samples.csv).
 
@@ -69,7 +69,8 @@ The neural objective combines weighted field reconstruction, spatial-gradient ag
 
 - Deterministic train, validation, test, and OOD splits
 - Random smooth heterogeneous media and localized initial-pressure sources
-- OOD cases with stronger contrasts, additional inclusions, and unseen material layers
+- Variable absorbing boundary widths and damping strengths
+- OOD cases with stronger contrasts, unseen material layers and harder boundary profiles
 - Fourier Neural Operator versus a compact residual CNN
 - Uncorrected coarse interpolation as the required baseline
 - Relative L2, RMSE, correlation, spectral error, energy error, physics residual, parameter count, checkpoint size, and CPU latency

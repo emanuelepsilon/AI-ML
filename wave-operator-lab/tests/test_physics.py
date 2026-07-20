@@ -28,6 +28,13 @@ class PhysicsTests(unittest.TestCase):
         standard = create_scenario(config, seed=44, ood=False)
         ood = create_scenario(config, seed=44, ood=True)
         self.assertGreater(float(np.mean(np.abs(standard.velocity - ood.velocity))), 0.01)
+        self.assertGreater(float(np.mean(np.abs(standard.damping - ood.damping))), 0.001)
+
+    def test_training_scenarios_vary_boundary_profiles(self) -> None:
+        config = ExperimentConfig(grid_size=24, simulation_steps=12, sponge_width=4)
+        first = create_scenario(config, seed=4, ood=False)
+        second = create_scenario(config, seed=9, ood=False)
+        self.assertGreater(float(np.mean(np.abs(first.damping - second.damping))), 0.0001)
 
 
 if __name__ == "__main__":

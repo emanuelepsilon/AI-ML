@@ -8,7 +8,7 @@ from torch.nn import functional as F
 from torch.utils.data import Dataset
 
 from .config import ExperimentConfig
-from .physics import AcousticScenario, create_scenario, damping_map, simulate
+from .physics import AcousticScenario, create_scenario, simulate
 
 
 @dataclass(frozen=True)
@@ -72,12 +72,13 @@ def coarse_scenario(scenario: AcousticScenario, config: ExperimentConfig) -> Aco
     coarse = coarse_config(config)
     velocity = resize_fields(scenario.velocity, coarse.grid_size)[0]
     initial = resize_fields(scenario.initial_pressure, coarse.grid_size)[0]
+    damping = resize_fields(scenario.damping, coarse.grid_size)[0]
     initial[[0, -1], :] = 0.0
     initial[:, [0, -1]] = 0.0
     return AcousticScenario(
         velocity=velocity.astype(np.float32),
         initial_pressure=initial.astype(np.float32),
-        damping=damping_map(coarse.grid_size, coarse.sponge_width, coarse.sponge_strength),
+        damping=np.clip(damping, 0.0, 0.18).astype(np.float32),
         description=f"{scenario.description}, coarse grid",
     )
 

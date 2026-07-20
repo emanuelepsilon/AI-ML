@@ -31,15 +31,15 @@
     "fno": {
       "parameters": 207783,
       "best_epoch": 24,
-      "best_validation_loss": 0.0005354903866342889,
-      "duration_seconds": 96.6258510001935,
+      "best_validation_loss": 0.0005397672988086318,
+      "duration_seconds": 129.01082760002464,
       "checkpoint": "fno_best.pt"
     },
     "cnn": {
       "parameters": 46947,
       "best_epoch": 23,
-      "best_validation_loss": 0.000492012032433801,
-      "duration_seconds": 44.05225419998169,
+      "best_validation_loss": 0.0005002715515729506,
+      "duration_seconds": 48.35238269995898,
       "checkpoint": "cnn_best.pt"
     }
   }

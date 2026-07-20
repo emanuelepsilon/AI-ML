@@ -4,15 +4,15 @@ All models were evaluated on the same held-out simulations and on a harder out-o
 
 | Model | Split | Relative L2 | Correlation | Spectral error | Energy error | Physics residual | Inference ms/sample |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| FNO | TEST | 0.3759 | 0.9032 | 0.2868 | 0.3461 | 2.563e-05 | 3.435 |
-| FNO | OOD | 0.4770 | 0.8680 | 0.3213 | 0.3618 | 3.596e-05 | 3.435 |
-| CNN | TEST | 0.3542 | 0.9119 | 0.2853 | 1.0419 | 4.587e-05 | 1.281 |
-| CNN | OOD | 0.4292 | 0.8874 | 0.3090 | 1.1375 | 5.905e-05 | 1.281 |
+| FNO | TEST | 0.3750 | 0.9033 | 0.2859 | 0.3280 | 2.475e-05 | 2.506 |
+| FNO | OOD | 0.4758 | 0.8687 | 0.3210 | 0.3650 | 3.610e-05 | 2.506 |
+| CNN | TEST | 0.3541 | 0.9113 | 0.2834 | 1.0388 | 4.587e-05 | 1.338 |
+| CNN | OOD | 0.4309 | 0.8871 | 0.3092 | 1.1450 | 5.949e-05 | 1.338 |
 
 ## Interpolation Baseline
 
-- Test relative L2: **0.4613**
-- OOD relative L2: **0.5086**
+- Test relative L2: **0.4585**
+- OOD relative L2: **0.5039**
 
 The interpolation baseline is the uncorrected coarse-grid solution resized to the fine grid. A learned model must improve on this result to demonstrate useful reconstruction rather than simple resizing.
 
@@ -20,15 +20,15 @@ The interpolation baseline is the uncorrected coarse-grid solution resized to th
 
 | Model | Split | Mean sequence L2 | Late-time L2 |
 | --- | --- | ---: | ---: |
-| FNO | TEST | 0.3717 | 0.5535 |
-| FNO | OOD | 0.4683 | 0.6985 |
-| CNN | TEST | 0.3432 | 0.5354 |
-| CNN | OOD | 0.4175 | 0.6544 |
+| FNO | TEST | 0.3713 | 0.5493 |
+| FNO | OOD | 0.4676 | 0.6852 |
+| CNN | TEST | 0.3432 | 0.5301 |
+| CNN | OOD | 0.4190 | 0.6453 |
 
 ## Runtime Context
 
-- Fine-grid solver, complete 72-step trajectory: **4.576 ms/scenario**
-- Coarse-grid solver, complete trajectory: **3.759 ms/scenario**
+- Fine-grid solver, complete 72-step trajectory: **10.822 ms/scenario**
+- Coarse-grid solver, complete trajectory: **4.164 ms/scenario**
 - Evaluation device: **cpu**
 - Fine/coarse grids: **32 x 32 / 16 x 16**
 

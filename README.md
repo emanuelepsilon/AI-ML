@@ -36,9 +36,9 @@ The project combines a parameterized acoustic PDE solver, paired coarse/fine sim
 
 | Method | Test relative L2 | OOD relative L2 |
 | --- | ---: | ---: |
-| Coarse interpolation | 0.4613 | 0.5086 |
-| Fourier Neural Operator | 0.3759 | 0.4770 |
-| Convolutional baseline | **0.3542** | **0.4292** |
+| Coarse interpolation | 0.4585 | 0.5039 |
+| Fourier Neural Operator | 0.3750 | 0.4758 |
+| Convolutional baseline | **0.3541** | **0.4309** |
 
 The best reconstruction model reduces held-out error by **23.2%** relative to interpolation alone. The FNO achieves stronger physics and energy consistency, while the CNN produces the lowest field error and latency. The repository includes trained checkpoints, sample-level metrics, a model card, tests, an interactive dashboard, and reproducible experiment configuration.
 
