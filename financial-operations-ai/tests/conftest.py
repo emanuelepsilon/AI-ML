@@ -27,4 +27,3 @@ def demo_path(tmp_path):
     path = Path(tmp_path) / "demo"
     write_dataset(path)
     return path
-

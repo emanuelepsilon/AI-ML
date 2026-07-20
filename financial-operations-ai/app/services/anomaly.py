@@ -64,4 +64,3 @@ def detect_anomalies(session: Session, contamination=0.08):
         anomalies.append(anomaly)
     session.commit()
     return anomalies
-

@@ -23,4 +23,3 @@ def test_anomaly_detector_finds_labelled_outliers(loaded_session):
     predicted = {row.transaction_id for row in loaded_session.query(Anomaly).all()}
     assert len(expected & predicted) / len(expected) >= 0.8
     assert len(expected & predicted) / len(predicted) >= 0.6
-

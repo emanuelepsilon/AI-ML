@@ -71,4 +71,3 @@ class InvoiceCategorizer:
 
 
 categorizer = InvoiceCategorizer()
-

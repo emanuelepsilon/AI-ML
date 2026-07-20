@@ -11,4 +11,3 @@ def llm_config():
         "base_url": os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
         "model": os.getenv("LLM_MODEL", ""),
     }
-

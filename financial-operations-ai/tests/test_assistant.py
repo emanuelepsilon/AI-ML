@@ -21,4 +21,3 @@ def test_unsupported_answer_refuses(loaded_session):
     )
     assert sources == []
     assert "not contain enough evidence" in answer
-

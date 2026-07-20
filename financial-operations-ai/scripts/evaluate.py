@@ -150,4 +150,3 @@ The figures measure this fixed demonstration dataset. They are not estimates of 
 
 if __name__ == "__main__":
     print(json.dumps(run_evaluation(), indent=2))
-

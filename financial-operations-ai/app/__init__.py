@@ -1,2 +1,1 @@
 """Financial operations platform."""
-

@@ -33,4 +33,3 @@ def test_invoice_classifier_uses_model_output(loaded_session):
         invoices
     )
     assert accuracy >= 0.9
-

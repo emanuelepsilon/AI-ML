@@ -45,4 +45,3 @@ Models suggest categories, matches and anomalies. The application does not execu
 ## Provider Boundary
 
 The core calculations do not depend on an LLM. Optional model access uses an OpenAI compatible endpoint configured through environment variables. Keys remain outside source control.
-

@@ -121,4 +121,3 @@ def import_transactions(session: Session, content):
         imported += 1
     session.commit()
     return imported
-

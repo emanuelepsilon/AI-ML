@@ -196,4 +196,3 @@ if __name__ == "__main__":
     root = Path(__file__).resolve().parents[1]
     counts = write_dataset(root / "data" / "demo")
     print(json.dumps(counts, indent=2))
-

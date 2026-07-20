@@ -152,4 +152,3 @@ def anomalies(session: Session = Depends(get_db)):
 def assistant(request: AssistantRequest, session: Session = Depends(get_db)):
     answer, sources, mode = answer_question(session, request.question)
     return AssistantResponse(answer=answer, sources=sources, mode=mode)
-

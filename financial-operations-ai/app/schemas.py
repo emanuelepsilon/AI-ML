@@ -14,4 +14,3 @@ class AssistantResponse(BaseModel):
     answer: str
     sources: list[dict]
     mode: str
-

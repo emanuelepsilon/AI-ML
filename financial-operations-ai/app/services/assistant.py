@@ -130,4 +130,3 @@ def answer_question(session: Session, question: str):
         except (httpx.HTTPError, KeyError, IndexError):
             pass
     return _offline_answer(question, sources), sources, "deterministic"
-

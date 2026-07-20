@@ -20,4 +20,3 @@ def test_match_requires_named_human_approval(loaded_session):
     assert loaded_session.get(Reconciliation, match.id).status == "approved"
     event = loaded_session.query(ApprovalEvent).filter_by(entity_id=match.id).one()
     assert event.reviewer == "Emanuel Melki"
-
