@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Financial Operations AI</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b0e12; --panel:#11161d; --line:#28313d; --text:#edf2f7; --muted:#9ba8b7; --green:#54d18b; --amber:#f3bd62; --blue:#60a5fa; --red:#fb7185; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px Arial, sans-serif; }
+    header { height:58px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; border-bottom:1px solid var(--line); background:#0d1117; }
+    h1 { font-size:18px; margin:0; letter-spacing:0; }
+    h2 { font-size:15px; margin:0; }
+    button { border:1px solid #3b4756; background:#18202a; color:var(--text); height:34px; padding:0 12px; cursor:pointer; }
+    button:hover { border-color:var(--blue); }
+    button.primary { background:#176b42; border-color:#268c5b; }
+    main { padding:18px 24px 32px; max-width:1500px; margin:auto; }
+    .metrics { display:grid; grid-template-columns:repeat(6, minmax(120px,1fr)); border:1px solid var(--line); margin-bottom:18px; }
+    .metric { padding:14px; border-right:1px solid var(--line); min-height:72px; }
+    .metric:last-child { border-right:0; }
+    .metric strong { display:block; font-size:22px; margin-top:6px; }
+    .metric span { color:var(--muted); font-size:12px; }
+    .workspace { display:grid; grid-template-columns:minmax(0, 2fr) minmax(320px, 1fr); gap:18px; }
+    .section { border-top:1px solid var(--line); padding-top:12px; margin-bottom:22px; }
+    .section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    table { width:100%; border-collapse:collapse; table-layout:fixed; background:var(--panel); border:1px solid var(--line); }
+    th, td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    th { color:var(--muted); font-size:11px; text-transform:uppercase; font-weight:600; background:#0e1319; }
+    td.num { font-variant-numeric:tabular-nums; }
+    .status { color:var(--amber); }
+    .high { color:var(--red); }
+    .assistant { border:1px solid var(--line); background:var(--panel); padding:14px; min-height:510px; }
+    textarea { width:100%; min-height:90px; resize:vertical; background:#0b1016; color:var(--text); border:1px solid #354151; padding:10px; font:inherit; margin:12px 0 8px; }
+    pre { white-space:pre-wrap; font:13px/1.5 Arial, sans-serif; color:#dce6f0; background:#0b1016; border:1px solid var(--line); padding:12px; min-height:150px; }
+    .sources { color:var(--muted); font-size:12px; line-height:1.45; }
+    .imports { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    input[type=file] { max-width:185px; color:var(--muted); }
+    #notice { color:var(--green); margin-left:10px; }
+    @media (max-width:900px) { .metrics { grid-template-columns:repeat(2,1fr); } .workspace { grid-template-columns:1fr; } header { padding:0 14px; } main { padding:14px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Financial Operations AI</h1>
+    <div><button id="process" class="primary">Run analysis</button><span id="notice"></span></div>
+  </header>
+  <main>
+    <div class="metrics" id="metrics"></div>
+    <div class="section">
+      <div class="section-head"><h2>Data imports</h2></div>
+      <div class="imports">
+        <input id="companies" type="file" accept=".csv"><button onclick="upload('companies')">Import companies</button>
+        <input id="invoices" type="file" accept=".jsonl"><button onclick="upload('invoices')">Import invoices</button>
+        <input id="transactions" type="file" accept=".csv"><button onclick="upload('transactions')">Import transactions</button>
+      </div>
+    </div>
+    <div class="workspace">
+      <div>
+        <section class="section">
+          <div class="section-head"><h2>Suggested reconciliations</h2><span id="match-count"></span></div>
+          <table><thead><tr><th>Invoice</th><th>Transaction</th><th>Vendor</th><th>Amount</th><th>Score</th><th>Status</th><th>Review</th></tr></thead><tbody id="matches"></tbody></table>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>Anomaly review</h2><span id="anomaly-count"></span></div>
+          <table><thead><tr><th>Transaction</th><th>Company</th><th>Counterparty</th><th>Amount</th><th>Score</th><th>Reason</th></tr></thead><tbody id="anomalies"></tbody></table>
+        </section>
+      </div>
+      <aside class="assistant">
+        <h2>Evidence assistant</h2>
+        <textarea id="question" placeholder="Which payments need investigation?"></textarea>
+        <button id="ask">Investigate</button>
+        <pre id="answer">Ask about an invoice, reconciliation or anomaly.</pre>
+        <div class="sources" id="sources"></div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const formatMoney = value => new Intl.NumberFormat('en-SE', {maximumFractionDigits:0}).format(value);
+    async function json(url, options) { const response = await fetch(url, options); if (!response.ok) throw new Error(await response.text()); return response.json(); }
+    async function refresh() {
+      const [summary, matches, anomalies] = await Promise.all([json('/api/summary'), json('/api/reconciliations'), json('/api/anomalies')]);
+      const items = [['Companies',summary.companies],['Invoices',summary.invoices],['Transactions',summary.transactions],['Suggested',summary.suggested_matches],['Approved',summary.approved_matches],['Open anomalies',summary.open_anomalies]];
+      document.querySelector('#metrics').innerHTML = items.map(x => `<div class="metric"><span>${x[0]}</span><strong>${x[1]}</strong></div>`).join('');
+      document.querySelector('#match-count').textContent = `${matches.length} records`;
+      document.querySelector('#matches').innerHTML = matches.map(m => `<tr><td>${m.invoice}</td><td>${m.transaction}</td><td>${m.vendor}</td><td class="num">${formatMoney(m.amount)} ${m.currency}</td><td>${m.score}</td><td class="status">${m.status}</td><td>${m.status === 'suggested' ? `<button onclick="approve(${m.id})">Approve</button>` : ''}</td></tr>`).join('');
+      document.querySelector('#anomaly-count').textContent = `${anomalies.length} records`;
+      document.querySelector('#anomalies').innerHTML = anomalies.map(a => `<tr><td>${a.transaction}</td><td>${a.company}</td><td>${a.counterparty}</td><td class="num">${formatMoney(a.amount)} ${a.currency}</td><td class="${a.severity}">${a.score}</td><td title="${a.reasons}">${a.reasons}</td></tr>`).join('');
+    }
+    async function upload(kind) { const file = document.querySelector(`#${kind}`).files[0]; if (!file) return; const body = new FormData(); body.append('file', file); const result = await json(`/api/import/${kind}`, {method:'POST', body}); document.querySelector('#notice').textContent = `${result.imported} ${kind} imported`; await refresh(); }
+    async function approve(id) { const reviewer = prompt('Reviewer name'); if (!reviewer) return; await json(`/api/reconciliations/${id}/approve`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({reviewer, note:'Reviewed in dashboard'})}); await refresh(); }
+    document.querySelector('#process').onclick = async () => { const result = await json('/api/process', {method:'POST'}); document.querySelector('#notice').textContent = `${result.suggested_matches} matches and ${result.open_anomalies} anomalies`; await refresh(); };
+    document.querySelector('#ask').onclick = async () => { const result = await json('/api/assistant', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question:document.querySelector('#question').value})}); document.querySelector('#answer').textContent = result.answer; document.querySelector('#sources').innerHTML = `<b>Sources</b><br>${result.sources.map(s => `${s.id}: ${s.title}`).join('<br>') || 'No supporting records'}`; };
+    refresh().catch(error => document.querySelector('#notice').textContent = error.message);
+  </script>
+</body>
+</html>

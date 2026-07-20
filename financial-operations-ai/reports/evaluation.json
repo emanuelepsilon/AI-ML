@@ -1,0 +1,27 @@
+{
+  "dataset": {
+    "invoices": 108,
+    "transactions": 110,
+    "labelled_anomalies": 8,
+    "ground_truth_matches": 84
+  },
+  "invoice_extraction_field_accuracy": 1.0,
+  "invoice_category_accuracy": 1.0,
+  "reconciliation": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "anomaly_detection": {
+    "precision": 0.7272727272727273,
+    "recall": 1.0,
+    "f1": 0.8421052631578948
+  },
+  "assistant": {
+    "citation_validity": 1.0,
+    "source_use": 1.0,
+    "unsupported_question_refusal": 1.0,
+    "cases": 4
+  },
+  "runtime_seconds": 1.3503922999370843
+}

@@ -30,6 +30,7 @@ venv/
 *.jpeg
 !ai-internship-intelligence-dashboard/assets/*.png
 !wave-operator-lab/assets/*.png
+!financial-operations-ai/assets/*.png
 
 # OS/editor
 .DS_Store
