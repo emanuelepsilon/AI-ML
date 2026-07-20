@@ -40,7 +40,7 @@ The project combines a parameterized acoustic PDE solver, paired coarse/fine sim
 | Fourier Neural Operator | 0.3750 | 0.4758 |
 | Convolutional baseline | **0.3541** | **0.4309** |
 
-The best reconstruction model reduces held-out error by **23.2%** relative to interpolation alone. The FNO achieves stronger physics and energy consistency, while the CNN produces the lowest field error and latency. The repository includes trained checkpoints, sample-level metrics, a model card, tests, an interactive dashboard, and reproducible experiment configuration.
+The best reconstruction model reduces held-out error by **22.8%** relative to interpolation alone. The FNO achieves stronger physics and energy consistency while the CNN produces the lowest field error and latency. The repository includes trained checkpoints, sample-level metrics and reproducible experiment configuration.
 
 ## Project Archive
 
